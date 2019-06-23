@@ -13,10 +13,12 @@ function setup() {
 
   const imageUpload = document.getElementById("image_upload");
   imageUpload.addEventListener("change", uploadImage, false);
+
+  renderImage("./bigil.jpg");
 }
 
 /**
- * Will be on each request animation frame
+ * Will be called on each request animation frame
  */
 
 function draw() {
@@ -68,19 +70,30 @@ function draw() {
 function uploadImage(event) {
   const reader = new FileReader();
   reader.onload = event => {
-    loadImage(event.target.result, loadedImage => {
-      background(10);
-      currentImage = loadedImage;
-
-      for (let i = 0; i < total; i++) {
-        circles[i] = {};
-        circles[i].prevPos = { x: width / 2, y: height / 2 };
-        circles[i].pos = { x: width / 2, y: height / 2 };
-        circles[i].dir = random() > 0.5 ? 1 : -1;
-        circles[i].radius = random(5, 10);
-        circles[i].angle = 0;
-      }
-    });
+    renderImage(event.target.result);
   };
   reader.readAsDataURL(event.target.files[0]);
+}
+
+function renderImage(imagePath) {
+  loadImage(imagePath, loadedImage => {
+    background(10);
+    currentImage = loadedImage;
+    // console.log(, currentImage.width);
+
+    for (let i = 0; i < total; i++) {
+      circles[i] = {};
+      circles[i].prevPos = {
+        x: currentImage.width / 2,
+        y: currentImage.height / 2
+      };
+      circles[i].pos = {
+        x: currentImage.width / 2,
+        y: currentImage.height / 2
+      };
+      circles[i].dir = random() > 0.5 ? 1 : -1;
+      circles[i].radius = random(5, 10);
+      circles[i].angle = 0;
+    }
+  });
 }
